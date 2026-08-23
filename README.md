@@ -124,3 +124,11 @@ The models are evaluated using:
 
 - **MAE (Mean Absolute Error)** — measures the average absolute prediction error.
 - **RMSE (Root Mean Squared Error)** — measures prediction error while giving more weight to larger errors.
+
+## How to Run
+
+### 1. Clone the repository
+
+```bash
+git clone <your-github-repository-url>
+cd time-series-forecasting
