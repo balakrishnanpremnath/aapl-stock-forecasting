@@ -86,3 +86,11 @@ This project is for educational purposes only and is not financial advice. Stock
 | LSTM | 10.32 | 11.37 |
 
 The Naive Baseline achieved the lowest MAE and RMSE on the 90-day test window, outperforming both Prophet and LSTM.
+
+## Conclusion
+
+The Naive Baseline outperformed both Prophet and LSTM on the 90-day test window. It achieved the lowest MAE of 8.07 and RMSE of 9.80.
+
+This result shows that daily stock closing prices can be difficult to forecast because they often behave similarly to a random walk. More complex models such as Prophet and LSTM may learn noise from the historical data rather than useful future patterns.
+
+Further improvements could include additional features such as trading volume, technical indicators, and macroeconomic variables instead of relying only on historical closing prices.
