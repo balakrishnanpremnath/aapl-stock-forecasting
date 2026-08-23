@@ -103,3 +103,24 @@ time-series-forecasting/
 ├── README.md
 ├── requirements.txt
 └── time_series_forecasting.ipynb
+
+## Dataset and Models
+
+### Dataset
+
+The project uses historical stock price data for time-series forecasting. The closing price is used as the main target variable.
+
+### Forecasting Models
+
+Three forecasting approaches are evaluated:
+
+- **Naive Baseline** — uses the previous day's value as the next prediction.
+- **Prophet** — a time-series forecasting model designed to capture trends and seasonality.
+- **LSTM** — a deep learning model designed to learn patterns from sequential data.
+
+### Evaluation Metrics
+
+The models are evaluated using:
+
+- **MAE (Mean Absolute Error)** — measures the average absolute prediction error.
+- **RMSE (Root Mean Squared Error)** — measures prediction error while giving more weight to larger errors.
