@@ -76,3 +76,13 @@ This project is for educational purposes only and is not financial advice. Stock
 6. Evaluate models using MAE and RMSE
 7. Compare the forecasting results
 8. Identify the best-performing approach
+
+## Model Performance
+
+| Model | MAE | RMSE |
+|---|---:|---:|
+| Naive Baseline | 8.07 | 9.80 |
+| Prophet | 10.03 | 11.46 |
+| LSTM | 10.32 | 11.37 |
+
+The Naive Baseline achieved the lowest MAE and RMSE on the 90-day test window, outperforming both Prophet and LSTM.
