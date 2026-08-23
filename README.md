@@ -94,3 +94,12 @@ The Naive Baseline outperformed both Prophet and LSTM on the 90-day test window.
 This result shows that daily stock closing prices can be difficult to forecast because they often behave similarly to a random walk. More complex models such as Prophet and LSTM may learn noise from the historical data rather than useful future patterns.
 
 Further improvements could include additional features such as trading volume, technical indicators, and macroeconomic variables instead of relying only on historical closing prices.
+
+## Project Structure
+
+```text
+time-series-forecasting/
+│
+├── README.md
+├── requirements.txt
+└── time_series_forecasting.ipynb
