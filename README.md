@@ -65,3 +65,14 @@ The naive baseline (MAE: 8.07, RMSE: 9.80) outperformed both Prophet (MAE: 10.03
 ## ⚠️ Disclaimer
 
 This project is for educational purposes only and is not financial advice. Stock price forecasting is inherently difficult, and no model here should be used to make real trading or investment decisions.
+
+## Project Workflow
+
+1. Load historical stock price data
+2. Explore and visualize the time series
+3. Create a naive baseline forecast
+4. Train a Prophet forecasting model
+5. Train an LSTM deep learning model
+6. Evaluate models using MAE and RMSE
+7. Compare the forecasting results
+8. Identify the best-performing approach
