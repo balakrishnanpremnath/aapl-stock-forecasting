@@ -1,134 +1,164 @@
-# AAPL Stock Price Forecasting: Naive vs Prophet vs LSTM
+# AAPL Stock Price Forecasting
 
-A time series forecasting project comparing three approaches of increasing complexity to predict Apple (AAPL) stock closing prices — a naive baseline, Facebook's Prophet, and an LSTM neural network.
+Comparing a naive baseline, Prophet, and an LSTM neural network
+for forecasting Apple (AAPL) closing prices.
 
-## 📌 Project Overview
+## Project Overview
 
-**Goal:** Predict AAPL daily closing prices and evaluate whether more complex models actually outperform a simple baseline.
+This project explores historical stock prices, builds three forecasting
+models, and compares their prediction errors using MAE and RMSE.
 
-**Dataset:** 5 years of daily AAPL closing prices (2019–2024), pulled live via the `yfinance` API.
+The main learning objective is to understand how forecasting assumptions,
+data preparation, and evaluation methods affect model comparisons.
 
-**Approach:**
-1. Explore and decompose the series into trend, seasonality, and noise
-2. Test for stationarity using the Augmented Dickey-Fuller (ADF) test
-3. Build a naive baseline forecast
-4. Fit a classical model (Prophet)
-5. Fit a deep learning model (LSTM)
-6. Compare all three on the same held-out 90-day test period
+## Dataset
 
-## 🛠️ Tech Stack
+- **Source:** Yahoo Finance through `yfinance`
+- **Ticker:** AAPL
+- **Requested date range:** January 1, 2019 to January 1, 2024
+  (end date excluded)
+- **Target:** Closing price
+- **Preparation:** Reindex to weekdays and interpolate missing values
+- **Test split:** Last 90 rows of the prepared series
 
-- **Data:** `yfinance`, `pandas`, `numpy`
-- **Classical time series:** `statsmodels`, `Prophet`
-- **Deep learning:** `TensorFlow` / `Keras` (LSTM)
-- **Evaluation & visualization:** `scikit-learn`, `matplotlib`
+The prepared series includes interpolated weekday values, so its rows
+do not correspond exclusively to actual exchange trading days.
 
-## 📊 Results
+## Tools and Libraries
 
-Models were evaluated on the last 90 days of data (unseen during training), using MAE and RMSE (lower = better).
-
-| Model | MAE | RMSE |
-|---|---|---|
-| **Naive Baseline** | **8.07** | **9.80** |
-| Prophet | 10.03 | 11.46 |
-| LSTM | 10.32 | 11.37 |
-
-The naive baseline — simply predicting "tomorrow's price = today's price" — outperformed both Prophet and the LSTM on this test window.
-
-## 💡 Conclusion
-
-The naive baseline (MAE: 8.07, RMSE: 9.80) outperformed both Prophet (MAE: 10.03) and the LSTM (MAE: 10.32) on this 90-day test window. This is a well-documented phenomenon in stock forecasting: daily closing prices closely follow a random walk, so "tomorrow ≈ today" is a surprisingly strong benchmark. Prophet and the LSTM both had more room to overfit to noise in the training period, since they're trying to learn patterns in a series that has very little exploitable structure. This suggests that improving forecast accuracy further would likely require additional features (trading volume, technical indicators, macroeconomic signals) rather than a more complex model architecture on price data alone.
-
-## 🚀 Next Steps
-
-- Add exogenous features (trading volume, moving averages, RSI, macroeconomic indicators)
-- Try SARIMA or `auto_arima` for a fuller classical model comparison
-- Backtest across multiple rolling time windows instead of a single train/test split
-- Deploy as an interactive Streamlit app where users can pick a ticker and forecast horizon
-
-## 📁 Repository Structure
-
-```
-├── time_series_forecasting.ipynb   # Full notebook: data, EDA, models, evaluation
-└── README.md                       # Project overview (this file)
-```
-
-## ▶️ How to Run
-
-1. Open `time_series_forecasting.ipynb` in [Google Colab](https://colab.research.google.com) or Jupyter locally
-2. Run the first cell to install dependencies:
-   ```bash
-   pip install pandas numpy matplotlib yfinance statsmodels pmdarima prophet scikit-learn tensorflow
-   ```
-3. Run all cells in order, top to bottom
-
-## ⚠️ Disclaimer
-
-This project is for educational purposes only and is not financial advice. Stock price forecasting is inherently difficult, and no model here should be used to make real trading or investment decisions.
+- Python
+- Pandas and NumPy
+- Matplotlib
+- yfinance
+- Statsmodels
+- Prophet
+- Scikit-learn
+- TensorFlow / Keras
 
 ## Project Workflow
 
-1. Load historical stock price data
-2. Explore and visualize the time series
-3. Create a naive baseline forecast
-4. Train a Prophet forecasting model
-5. Train an LSTM deep learning model
-6. Evaluate models using MAE and RMSE
-7. Compare the forecasting results
-8. Identify the best-performing approach
+1. Download historical AAPL prices.
+2. Prepare and inspect the time series.
+3. Explore trend and seasonality.
+4. Apply the Augmented Dickey-Fuller stationarity test.
+5. Split the series chronologically.
+6. Build naive, Prophet, and LSTM models.
+7. Calculate MAE and RMSE.
+8. Visualize predictions and review evaluation limitations.
 
-## Model Performance
+## Models
+
+| Model | Current implementation |
+|---|---|
+| Naive baseline | Repeats the final training price across the entire test period. |
+| Prophet | Produces forecasts for the test period from the training data. |
+| LSTM | Uses 30-observation input windows to predict the next value. Later test windows include earlier observed test values. |
+
+## Preliminary Results
+
+The following values were reported in the original experiment:
 
 | Model | MAE | RMSE |
 |---|---:|---:|
-| Naive Baseline | 8.07 | 9.80 |
+| Naive baseline | 8.07 | 9.80 |
 | Prophet | 10.03 | 11.46 |
 | LSTM | 10.32 | 11.37 |
 
-The Naive Baseline achieved the lowest MAE and RMSE on the 90-day test window, outperforming both Prophet and LSTM.
+Lower values indicate smaller prediction errors.
 
-## Conclusion
+The naive baseline has the lowest reported errors in this experiment.
+However, the evaluation issues below must be corrected before treating
+these numbers as a fair comparison of model performance.
 
-The Naive Baseline outperformed both Prophet and LSTM on the 90-day test window. It achieved the lowest MAE of 8.07 and RMSE of 9.80.
+## Evaluation Limitations
 
-This result shows that daily stock closing prices can be difficult to forecast because they often behave similarly to a random walk. More complex models such as Prophet and LSTM may learn noise from the historical data rather than useful future patterns.
+- The LSTM scaler is fitted on the full series before splitting.
+  It should be fitted using training data only.
+- Naive and Prophet forecasts use a fixed forecast origin, while the
+  LSTM uses rolling windows containing newly observed test-period prices.
+  A consistent evaluation protocol is needed.
+- Interpolation introduces values for weekdays without trading data.
+  Its effect on the experiment should be assessed.
+- Results cover one test window and may not generalize to other periods.
+- Downloaded prices and model results may vary with data revisions,
+  package versions, and random initialization.
 
-Further improvements could include additional features such as trading volume, technical indicators, and macroeconomic variables instead of relying only on historical closing prices.
+These results are preliminary and do not demonstrate investment
+profitability.
 
-## Project Structure
+## Main Notebook
 
-```text
-time-series-forecasting/
-│
-├── README.md
-├── requirements.txt
-└── time_series_forecasting.ipynb
-
-## Dataset and Models
-
-### Dataset
-
-The project uses historical stock price data for time-series forecasting. The closing price is used as the main target variable.
-
-### Forecasting Models
-
-Three forecasting approaches are evaluated:
-
-- **Naive Baseline** — uses the previous day's value as the next prediction.
-- **Prophet** — a time-series forecasting model designed to capture trends and seasonality.
-- **LSTM** — a deep learning model designed to learn patterns from sequential data.
-
-### Evaluation Metrics
-
-The models are evaluated using:
-
-- **MAE (Mean Absolute Error)** — measures the average absolute prediction error.
-- **RMSE (Root Mean Squared Error)** — measures prediction error while giving more weight to larger errors.
+`time_series_forecasting.ipynb` contains the data preparation,
+exploratory analysis, model training, evaluation, and visualizations.
 
 ## How to Run
 
 ### 1. Clone the repository
 
 ```bash
-git clone <your-github-repository-url>
-cd time-series-forecasting
+git clone https://github.com/balakrishnanpremnath/aapl-stock-forecasting.git
+cd aapl-stock-forecasting
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate on Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Activate on macOS or Linux:
+
+```bash
+source .venv/bin/activate
+```
+
+### 3. Install dependencies
+
+```bash
+python -m pip install pandas numpy matplotlib yfinance statsmodels prophet scikit-learn tensorflow jupyter
+```
+
+### 4. Check the Prophet import
+
+The notebook must include this import before creating the Prophet model:
+
+```python
+from prophet import Prophet
+```
+
+### 5. Open the notebook
+
+```bash
+jupyter notebook time_series_forecasting.ipynb
+```
+
+Run the cells from top to bottom. An internet connection is required
+to download the price data.
+
+## Planned Improvements
+
+- Fit preprocessing using training data only.
+- Use a consistent forecasting protocol across all models.
+- Evaluate across multiple chronological test windows.
+- Review interpolation and retain actual trading dates where appropriate.
+- Record package versions and random seeds.
+- Export reproducible metrics and comparison charts.
+- Test additional features and measure whether they improve performance.
+
+## Author
+
+**Balakrishnan Premnath**  
+BSc (Hons) in Data Science — Sri Lanka Technology Campus
+
+[GitHub](https://github.com/balakrishnanpremnath) |
+[LinkedIn](https://www.linkedin.com/in/balakrishnan-premnath)
+
+## Disclaimer
+
+This project is for educational purposes and is not financial advice.
